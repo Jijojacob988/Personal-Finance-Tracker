@@ -5,6 +5,12 @@
     box-shadow: var(--shadow);
     border-radius: 1rem;
     padding: 1rem 1.5rem;
+    margin: 2rem auto; /* Center horizontally and add margin from top and bottom */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f8ff;
 }
 
 .title {
@@ -19,4 +25,12 @@
 .title span {
     color: var(--theme); /* Ensure the span color remains as the theme color */
     font-weight: 700; /* Make the span text bolder */
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make the wrapper take the full viewport height */
+    padding: 2rem 0; /* Add some padding on top and bottom */
 }
