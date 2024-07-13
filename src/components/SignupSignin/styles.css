@@ -34,3 +34,10 @@
     height: 100vh; /* Make the wrapper take the full viewport height */
     padding: 2rem 0; /* Add some padding on top and bottom */
 }
+.p-login{
+    text-align: center;
+    font-weight: 300;
+    font-size: 0.8rem;
+    margin: 0;
+
+}
