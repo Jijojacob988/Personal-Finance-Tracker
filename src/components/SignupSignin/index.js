@@ -71,7 +71,7 @@ function SignupSigninComponent() {
                 setLoading(false);
             }
         } else {
-            toast.error("Doc already exists");
+           // toast.error("Doc already exists");
             setLoading(false);
         }
     }
