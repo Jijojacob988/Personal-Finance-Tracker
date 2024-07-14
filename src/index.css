@@ -35,3 +35,52 @@ input{
         opacity: 1;
         transition: all 0.3s;
       }
+
+      .input-flex {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 300px; /* Adjust width as necessary */
+        box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        background-color: white;
+      }
+      
+      .search-icon {
+        margin-right: 0.5rem;
+      }
+      
+      .input-field {
+        width: 100%;
+        padding: 0.5rem;
+        border: 0;
+      }
+      
+      .input-field:focus {
+        outline: none;
+      }
+      
+      .select-input {
+        width: 150px; /* Adjust width as necessary */
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
+        border-radius: 0.5rem;
+        padding: 0.2rem 0.5rem;
+        background-color: white;
+      }
+      
+      .select-input > div {
+        border: 0 !important;
+      }
+      
+      .input-radio {
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 0px 30px 8px rgba(227, 227, 227, 0.75);
+        border-radius: 0.5rem;
+        padding: 0.2rem 0.5rem;
+        background-color: white;
+      }
+      
