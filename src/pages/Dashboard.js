@@ -8,6 +8,7 @@ import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import TransactionTable from '../components/TransactionsTable';
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -15,6 +16,10 @@ function Dashboard() {
   const [user] = useAuthState(auth);
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
+
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const showExpenseModal = () => {
     setIsExpenseModalVisible(true);
@@ -32,7 +37,7 @@ function Dashboard() {
     setIsIncomeModalVisible(false);
   };
 
-  const onFinish = async (values, type) => {
+  const onFinish = async (values, type, setIsVisible) => {
     const newTransaction = {
       type: type,
       date: moment(values.date).format("YYYY-MM-DD"),
@@ -42,6 +47,7 @@ function Dashboard() {
     };
     await addTransaction(newTransaction);
     await fetchTransactions();  // Fetch transactions after adding a new one
+    setIsVisible(false); // Close the modal
   };
 
   async function addTransaction(transaction) {
@@ -52,6 +58,8 @@ function Dashboard() {
       );
       console.log("Document written with ID: ", docRef.id);
       toast.success("Transaction Added!");
+      setTransactions([...transactions, transaction]); // Use spread operator to update state immutably
+      calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
       toast.error("Couldn't add transaction");
@@ -62,7 +70,28 @@ function Dashboard() {
     if (user) {
       fetchTransactions();
     }
-  }, []);  // Add user as a dependency
+  }, [user]);  // Add user as a dependency
+
+  useEffect(() => {
+    calculateBalance();
+  }, [transactions]);
+
+  const calculateBalance = () => {
+    let incomeTotal = 0;
+    let expensesTotal = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "income") {
+        incomeTotal += transaction.amount;
+      } else {
+        expensesTotal += transaction.amount;
+      }
+    });
+
+    setIncome(incomeTotal);
+    setExpense(expensesTotal);
+    setTotalBalance(incomeTotal - expensesTotal);
+  };
 
   async function fetchTransactions() {
     setLoading(true);
@@ -87,25 +116,28 @@ function Dashboard() {
 
   return (
     <div>
-      
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
-          <Cards 
+          <Cards
+            income={income}
+            expense={expense}
+            totalBalance={totalBalance}
             showExpenseModal={showExpenseModal}
             showIncomeModal={showIncomeModal}
           />
           <AddExpenseModal
             isExpenseModalVisible={isExpenseModalVisible}
             handleExpenseCancel={handleExpenseCancel}
-            onFinish={onFinish}
+            onFinish={(values, type) => onFinish(values, type, setIsExpenseModalVisible)}
           />
           <AddIncomeModal
             isIncomeModalVisible={isIncomeModalVisible}
             handleIncomeCancel={handleIncomeCancel}
-            onFinish={onFinish}
+            onFinish={(values, type) => onFinish(values, type, setIsIncomeModalVisible)}
           />
+          <TransactionTable transactions={transactions} />
         </>
       )}
     </div>
