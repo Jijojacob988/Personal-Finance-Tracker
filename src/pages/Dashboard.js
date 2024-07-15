@@ -50,19 +50,19 @@ function Dashboard() {
     setIsVisible(false); // Close the modal
   };
 
-  async function addTransaction(transaction) {
+  async function addTransaction(transaction, many) {
     try {
       const docRef = await addDoc(
         collection(db, `users/${user.uid}/transactions`),
         transaction
       );
       console.log("Document written with ID: ", docRef.id);
-      toast.success("Transaction Added!");
+      if(!many) toast.success("Transaction Added!");
       setTransactions([...transactions, transaction]); // Use spread operator to update state immutably
       calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
-      toast.error("Couldn't add transaction");
+      if(!many) toast.error("Couldn't add transaction");
     }
   }
 
@@ -137,7 +137,10 @@ function Dashboard() {
             handleIncomeCancel={handleIncomeCancel}
             onFinish={(values, type) => onFinish(values, type, setIsIncomeModalVisible)}
           />
-          <TransactionTable transactions={transactions} />
+          <TransactionTable transactions={transactions} 
+          addTransaction={addTransaction} 
+          fetchTransactions={fetchTransactions}
+          />
         </>
       )}
     </div>
